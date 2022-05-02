@@ -45,6 +45,7 @@ struct ContentView: View {
         ZStack{
             Color.black.edgesIgnoringSafeArea(.all)
             VStack{
+                Spacer()
                 //TEXT
                 HStack{
                     Spacer()
@@ -57,22 +58,33 @@ struct ContentView: View {
 
                 //BUTTONS
                 ForEach(buttons, id: \.self){ row in
-                    HStack{
+                    HStack(spacing: 10){
                         ForEach(row, id: \.self){ item in
                             Button (action: {
                             }, label: {
                                 Text(item.rawValue)
                                     .font(.system(size: 32))
-                                    .frame(width: 70, height: 70)
+                                    .frame(width: self.buttonWidth(item: item),
+                                           height: self.buttonHeight()
+                                    )
                                     .background(Color.orange)
                                     .foregroundColor(.white)
-                                    .cornerRadius(35)
+                                    .cornerRadius(self.buttonWidth(item: item)/2)
                             })
                         }
                     }
+                    .padding(.bottom, 3)
                 }
             }
         }
+    }
+    
+    func buttonWidth(item: CalcButton) -> CGFloat{
+        return (UIScreen.main.bounds.width - (5*12))/4
+    }
+    
+    func buttonHeight() -> CGFloat{
+        return (UIScreen.main.bounds.width - (5*12))/4
     }
 }
 
