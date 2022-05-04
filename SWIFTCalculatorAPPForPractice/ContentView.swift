@@ -40,15 +40,21 @@ enum CalcButton : String{
     }
 }
 
+enum Operation {
+    case add, subtract, multiply, divide, none
+}
+
 struct ContentView: View {
     
     @State var value = "0"
+    @State var runningNumber = 0
+    @State var currentOperation: Operation = .none
     
     let buttons: [[CalcButton]] = [
         [.clear, .negative, .percent, .divide],
         [.seven, .eight, .nine, .multiply],
         [.four, .five, .six, .subtract],
-        [.one, .two, .three, .equal],
+        [.one, .two, .three, .add],
         [.zero, .decimal, .equal]
     
     ]
@@ -96,7 +102,45 @@ struct ContentView: View {
     func buttonHandler(button: CalcButton){
         switch button {
             case .add, .subtract, .multiply, .divide, .equal:
-                break
+            if button == .add {
+                self.currentOperation = .add
+                self.runningNumber = Int(self.value) ?? 0
+            }
+            else if button == .subtract {
+                self.currentOperation = .subtract
+                self.runningNumber = Int(self.value) ?? 0
+            }
+            else if button == .multiply {
+                self.currentOperation = .multiply
+                self.runningNumber = Int(self.value) ?? 0
+            }
+            else if button == .divide {
+                self.currentOperation = .divide
+                self.runningNumber = Int(self.value) ?? 0
+            }
+            else if button == .equal {
+                let runningValue = self.runningNumber
+                
+//                let currentValue = Int(self.value)
+                guard Int(self.value) != nil, let currentValue = Int(self.value) else {
+                    return
+                }
+                
+                switch self.currentOperation{
+                    case .add: self.value = "\(runningValue + currentValue)"
+                    case .subtract: self.value = "\(runningValue - currentValue)"
+                    case .multiply: self.value = "\(runningValue * currentValue)"
+                    case .divide: self.value = "\(runningValue / currentValue)"
+                    case .none:
+                        break
+                    
+                }
+            }
+            
+            if button != .equal {
+                self.value = "0"
+            }
+                
             case .clear:
                 self.value = "0"
             case .decimal, .negative, .percent:
