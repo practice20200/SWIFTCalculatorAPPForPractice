@@ -42,12 +42,14 @@ enum CalcButton : String{
 
 struct ContentView: View {
     
+    @State var value = "0"
+    
     let buttons: [[CalcButton]] = [
         [.clear, .negative, .percent, .divide],
         [.seven, .eight, .nine, .multiply],
         [.four, .five, .six, .subtract],
         [.one, .two, .three, .equal],
-        [.zero, .zero, .decimal, .equal]
+        [.zero, .decimal, .equal]
     
     ]
     
@@ -60,7 +62,7 @@ struct ContentView: View {
                 
                 HStack{
                     Spacer()
-                    Text("0")
+                    Text(value)
                     .bold()
                     .font(.system(size:64))
                     .foregroundStyle(.white)
@@ -72,6 +74,7 @@ struct ContentView: View {
                     HStack(spacing: 10){
                         ForEach(row, id: \.self){ item in
                             Button (action: {
+                                self.buttonHandler(button: item)
                             }, label: {
                                 Text(item.rawValue)
                                     .font(.system(size: 32))
@@ -90,7 +93,29 @@ struct ContentView: View {
         }
     }
     
+    func buttonHandler(button: CalcButton){
+        switch button {
+            case .add, .subtract, .multiply, .divide, .equal:
+                break
+            case .clear:
+                self.value = "0"
+            case .decimal, .negative, .percent:
+                break
+            default:
+                let number = button.rawValue
+                if self.value == "0"{
+                    value = number
+                }else{
+                    self.value = "\(self.value)\(number)"
+                }
+        }
+
+    }
+    
     func buttonWidth(item: CalcButton) -> CGFloat{
+        if item == .zero{
+            return ((UIScreen.main.bounds.width - (4*12))/4) * 2
+        }
         return (UIScreen.main.bounds.width - (5*12))/4
     }
     
